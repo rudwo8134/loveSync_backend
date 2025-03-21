@@ -3,15 +3,18 @@ import { AppModule } from './app.module';
 import { SwaggerModule } from '@nestjs/swagger';
 import { DocumentBuilder } from '@nestjs/swagger';
 import * as basicAuth from 'express-basic-auth';
-
+import * as dotenv from 'dotenv';
 async function bootstrap() {
+  dotenv.config();
   const app = await NestFactory.create(AppModule);
 
   app.use(
     ['/api'],
     basicAuth({
       challenge: true,
-      users: { loveSync: 'Baker#1234' },
+      users: {
+        [process.env.API_USERNAME]: process.env.API_PASSWORD,
+      },
     }),
   );
 
