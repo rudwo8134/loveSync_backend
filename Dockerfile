@@ -1,15 +1,23 @@
+# Use the official Node.js 18 image as a base
 FROM node:18-alpine
 
+# Set the working directory inside the container
 WORKDIR /app
 
-COPY package*.json ./
+# Copy package.json and yarn.lock to the working directory
+COPY package.json yarn.lock ./
 
-RUN npm install
+# Install dependencies using yarn
+RUN yarn install
 
+# Copy the rest of the application code to the working directory
 COPY . .
 
-RUN npm run build
+# Build the NestJS application
+RUN yarn build
 
+# Expose the port the app runs on
 EXPOSE 3000
 
-CMD ["npm", "run", "start:prod"]
+# Define the command to run the application
+CMD ["yarn", "start:prod"]
