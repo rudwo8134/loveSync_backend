@@ -1,11 +1,13 @@
-import { Module } from '@nestjs/common';
+import { ClassSerializerInterceptor, Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { QuestionModule } from './question/question.module';
-import { QuestionService } from './question/question.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule } from '@nestjs/config';
 import { QuestionModel } from './question/entities/question.entity';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { UserModule } from './user/user.module';
+
 @Module({
   imports: [
     ConfigModule.forRoot({
@@ -23,8 +25,15 @@ import { QuestionModel } from './question/entities/question.entity';
       synchronize: true,
     }),
     QuestionModule,
+    UserModule,
   ],
   controllers: [AppController],
-  providers: [AppService, QuestionService],
+  providers: [
+    AppService,
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ClassSerializerInterceptor,
+    },
+  ],
 })
 export class AppModule {}

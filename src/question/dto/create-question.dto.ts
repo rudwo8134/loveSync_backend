@@ -1,11 +1,17 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsArray, IsNumber } from 'class-validator';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import {
+  IsString,
+  IsNotEmpty,
+  IsArray,
+  IsNumber,
+  IsOptional,
+} from 'class-validator';
 
 export class CreateQuestionDto {
-  @ApiProperty({ description: '질문 번호' })
+  @ApiPropertyOptional({ description: '질문 번호 (자동 생성됨)' })
   @IsNumber()
-  @IsNotEmpty()
-  id: number;
+  @IsOptional()
+  id?: number;
 
   @ApiProperty({ description: '질문 내용' })
   @IsString()

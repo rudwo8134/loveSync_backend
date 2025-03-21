@@ -18,7 +18,7 @@ export class QuestionModel {
   @Column()
   type: string;
 
-  @Column('simple-array')
+  @Column('jsonb')
   options: {
     id: number;
     text: string;

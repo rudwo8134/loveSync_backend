@@ -1,26 +1,61 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateQuestionDto } from './dto/create-question.dto';
 import { UpdateQuestionDto } from './dto/update-question.dto';
+import { QuestionModel } from './entities/question.entity';
+import { Repository } from 'typeorm';
+import { InjectRepository } from '@nestjs/typeorm';
 
 @Injectable()
 export class QuestionService {
-  create(createQuestionDto: CreateQuestionDto) {
-    return 'This action adds a new question';
+  constructor(
+    @InjectRepository(QuestionModel)
+    private questionRepository: Repository<QuestionModel>,
+  ) {}
+
+  async create(createQuestionDto: CreateQuestionDto) {
+    const question = this.questionRepository.create(createQuestionDto);
+    const savedQuestion = await this.questionRepository.save(question);
+    return savedQuestion;
   }
 
-  findAll() {
-    return `This action returns all question`;
+  async findAll() {
+    return this.questionRepository.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} question`;
+  async findOne(id: number) {
+    const question = await this.questionRepository.findOne({ where: { id } });
+    if (!question) {
+      throw new NotFoundException('Question not found');
+    }
+    return question;
   }
 
-  update(id: number, updateQuestionDto: UpdateQuestionDto) {
-    return `This action updates a #${id} question`;
+  async update(id: number, updateQuestionDto: UpdateQuestionDto) {
+    const question = await this.questionRepository.findOne({ where: { id } });
+    if (!question) {
+      throw new NotFoundException('Question not found');
+    }
+    if (updateQuestionDto.text) {
+      question.text = updateQuestionDto.text;
+    }
+    if (updateQuestionDto.options) {
+      question.options = updateQuestionDto.options;
+    }
+    if (updateQuestionDto.type) {
+      question.type = updateQuestionDto.type;
+    }
+    question.version++;
+    question.updatedAt = new Date();
+    const updatedQuestion = await this.questionRepository.save(question);
+    return updatedQuestion;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} question`;
+  async remove(id: number) {
+    const question = await this.questionRepository.findOne({ where: { id } });
+    if (!question) {
+      throw new NotFoundException('Question not found');
+    }
+    await this.questionRepository.delete(id);
+    return { message: 'Question deleted successfully' };
   }
 }
