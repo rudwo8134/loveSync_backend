@@ -7,6 +7,8 @@ import { ConfigModule } from '@nestjs/config';
 import { QuestionModel } from './question/entities/question.entity';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { UserModule } from './user/user.module';
+import { ResultModule } from './result/result.module';
+import { Result } from './result/entities/result.entity';
 
 @Module({
   imports: [
@@ -21,11 +23,12 @@ import { UserModule } from './user/user.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      entities: [QuestionModel],
+      entities: [QuestionModel, Result],
       synchronize: true,
     }),
     QuestionModule,
     UserModule,
+    ResultModule,
   ],
   controllers: [AppController],
   providers: [
