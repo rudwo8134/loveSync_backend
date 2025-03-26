@@ -9,6 +9,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { UserModule } from './user/user.module';
 import { ResultModule } from './result/result.module';
 import { Result } from './result/entities/result.entity';
+import { AiModule } from './ai/ai.module';
 
 @Module({
   imports: [
@@ -29,6 +30,7 @@ import { Result } from './result/entities/result.entity';
     QuestionModule,
     UserModule,
     ResultModule,
+    AiModule,
   ],
   controllers: [AppController],
   providers: [
