@@ -2,9 +2,13 @@ import { Injectable } from '@nestjs/common';
 import { CreateResultDto } from './dto/create-result.dto';
 import { UpdateResultDto } from './dto/update-result.dto';
 import { QuestionService } from 'src/question/question.service';
+import { AiService } from 'src/ai/ai.service';
 @Injectable()
 export class ResultService {
-  constructor(private readonly questionService: QuestionService) {}
+  constructor(
+    private readonly questionService: QuestionService,
+    private readonly aiService: AiService,
+  ) {}
 
   async create(createResultDto: CreateResultDto) {
     const userResult = await Promise.all(
@@ -23,7 +27,8 @@ export class ResultService {
       }),
     );
     const result = await Promise.all(userResult);
-    return result;
+    const aiResult = await this.aiService.create({ response: result });
+    return aiResult;
   }
 
   async findAll() {
