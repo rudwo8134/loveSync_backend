@@ -31,6 +31,27 @@ export class ResultService {
     return aiResult;
   }
 
+  async createLocal(createResultDto: CreateResultDto) {
+    const userResult = await Promise.all(
+      createResultDto.response.map(async (item) => {
+        const question = await this.questionService.findOne(item.id);
+        const option = question.options.find(
+          (option) => option.id === item.selection,
+        );
+        const type = question.type;
+        return {
+          text: question.text,
+          optionText: option.text,
+          score: option.score,
+          type,
+        };
+      }),
+    );
+    const result = await Promise.all(userResult);
+    const aiResult = await this.aiService.createLocal({ response: result });
+    return aiResult;
+  }
+
   async findAll() {
     const questions = await this.questionService.findAll();
     const result = questions.map((question) => {
