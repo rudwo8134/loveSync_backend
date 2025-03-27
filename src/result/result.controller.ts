@@ -38,6 +38,29 @@ export class ResultController {
     return this.resultService.create(createResultDto);
   }
 
+  @ApiOperation({
+    summary: '결과 생성 - 아직 사용하지 마세여 local 컴퓨터필요합니다. ',
+  })
+  @ApiResponse({ status: 200, description: '결과 생성 성공' })
+  @ApiResponse({ status: 400, description: '결과 생성 실패' })
+  @ApiResponse({ status: 401, description: '인증 실패' })
+  @ApiBody({
+    type: CreateResultDto,
+    examples: {
+      example1: {
+        value: {
+          pinCode: '1F2F3F4F',
+          isCouple: false,
+          response: [{ id: 1, selection: 2 }],
+        },
+      },
+    },
+  })
+  @Post('local')
+  createLocal(@Body() createResultDto: CreateResultDto) {
+    return this.resultService.createLocal(createResultDto);
+  }
+
   @Get()
   findAll() {
     return this.resultService.findAll();

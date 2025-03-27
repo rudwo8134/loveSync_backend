@@ -10,4 +10,9 @@ export class AiController {
   create(@Body() createAiDto: CreateAiDto) {
     return this.aiService.create(createAiDto);
   }
+
+  @Post('local')
+  createLocal(@Body() createAiDto: CreateAiDto) {
+    return this.aiService.createLocal(createAiDto);
+  }
 }
